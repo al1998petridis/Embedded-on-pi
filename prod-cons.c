@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define QUEUESIZE 10
 #define LOOP 20
@@ -14,6 +15,10 @@ typedef struct {
   void * arg;
 } workFunction;
 
+void work(int i){
+  printf("Hello from work\n");
+  printf("%d has cosine : %f\n",i,cos(i));
+}
 
 typedef struct {
   int buf[QUEUESIZE];
