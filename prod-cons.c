@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <math.h>
 
 #define QUEUESIZE 10
 #define LOOP 20
@@ -15,13 +14,12 @@ typedef struct {
   void * arg;
 } workFunction;
 
-void work(int i){
-  printf("Hello from work\n");
-  printf("%d has cosine : %f\n",i,cos(i));
+void showMe(void *i){
+  printf("Just a message\n");
 }
 
 typedef struct {
-  int buf[QUEUESIZE];
+  workFunction buf[QUEUESIZE];
   long head, tail;
   int full, empty;
   pthread_mutex_t *mut;
@@ -55,7 +53,7 @@ int main ()
 void *producer (void *q)
 {
   queue *fifo;
-  int i;
+  workFunction producted;
 
   fifo = (queue *)q;
 
@@ -65,7 +63,7 @@ void *producer (void *q)
       printf ("producer: queue FULL.\n");
       pthread_cond_wait (fifo->notFull, fifo->mut);
     }
-    queueAdd (fifo, i);
+    queueAdd (fifo, producted);
     pthread_mutex_unlock (fifo->mut);
     pthread_cond_signal (fifo->notEmpty);
     usleep (100000);
@@ -76,7 +74,7 @@ void *producer (void *q)
       printf ("producer: queue FULL.\n");
       pthread_cond_wait (fifo->notFull, fifo->mut);
     }
-    queueAdd (fifo, i);
+    queueAdd (fifo, producted);
     pthread_mutex_unlock (fifo->mut);
     pthread_cond_signal (fifo->notEmpty);
     usleep (200000);
@@ -160,7 +158,7 @@ void queueDelete (queue *q)
   free (q);
 }
 
-void queueAdd (queue *q, int in)
+void queueAdd (queue *q, workFunction in)
 {
   q->buf[q->tail] = in;
   q->tail++;
