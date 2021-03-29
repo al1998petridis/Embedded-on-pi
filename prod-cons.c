@@ -14,8 +14,9 @@ typedef struct {
   void * arg;
 } workFunction;
 
-void showMe(void *i){
+void * showMe(void *i) {
   printf("Just a message\n");
+  return &i;
 }
 
 typedef struct {
@@ -42,7 +43,12 @@ int main ()
     exit (1);
   }
   pthread_create (&pro, NULL, producer, fifo);
+  struct timeval current_time;
+  gettimeofday(&current_time, NULL);
+
   pthread_create (&con, NULL, consumer, fifo);
+  struct timeval current_time;
+  gettimeofday(&current_time, NULL);
   pthread_join (pro, NULL);
   pthread_join (con, NULL);
   queueDelete (fifo);
@@ -184,3 +190,16 @@ void queueDel (queue *q, int *out)
 
   return;
 }
+
+/*
+    struct timeval start_time, end_time;
+    gettimeofday(&start_time, NULL);
+    long int start_sec = start_time.tv_sec;
+    long int start_usec = start_time.tv_usec;
+    sleep(2);
+    gettimeofday(&end_time, NULL);
+    long int end_sec = end_time.tv_sec;
+    long int end_usec = end_time.tv_usec;
+    printf("The program lasted %ld seconds and %ld microseconds", end_sec-start_sec, end_usec-start_usec);
+    return 0;
+*/
