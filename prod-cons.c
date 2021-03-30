@@ -26,7 +26,7 @@ void *showMe(void *i){
 
 struct timeval start_time, end_time;
 int counter = 0; //counter for how many items get into queue
-long double waits[LOOP*PRO_COUNT];
+double long waits[LOOP*PRO_COUNT];
 
 typedef struct {
   workFunction buf[QUEUESIZE];
@@ -40,12 +40,12 @@ queue *queueInit (void);
 void queueDelete (queue *q);
 void queueAdd (queue *q, workFunction *in);
 void queueDel (queue *q, workFunction *out);
-void csvfile (long double waits[], char *file);
+void csvfile (double long waits[], char *file);
 
 int main ()
 {
-  long double aggreg_time = 0;
-  long double mean_time = 0;
+  double long aggreg_time = 0;
+  double long mean_time = 0;
   gettimeofday(&start_time, NULL);
   queue *fifo;
   pthread_t pro[PRO_COUNT], con[CON_COUNT];
@@ -219,7 +219,7 @@ void queueDel (queue *q, workFunction *out)
   return;
 }
 
-void csvfile (long double waits[], char *file)
+void csvfile (double long waits[], char *file)
 {
   FILE *f;
   file = strcat(file, ".csv");
