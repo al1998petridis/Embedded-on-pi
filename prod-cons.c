@@ -225,6 +225,6 @@ void csvfile (double long waits[], char *file)
   file = strcat(file, ".csv");
   f = fopen(file, "w");
   for (int i=0; i<LOOP*PRO_COUNT; i++)
-    fprintf(f, "%d , %Lf", i,waits[i]);
+    fprintf(f, "%d , %Lf\n", i,waits[i]);
   fclose(f);
 }
