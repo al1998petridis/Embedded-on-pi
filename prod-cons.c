@@ -44,6 +44,8 @@ void csvfile (long double waits[], char *file);
 
 int main ()
 {
+  long double aggreg_time = 0;
+  long double mean_time = 0;
   gettimeofday(&start_time, NULL);
   queue *fifo;
   pthread_t pro[PRO_COUNT], con[CON_COUNT];
@@ -67,16 +69,14 @@ int main ()
     pthread_join (con[i], NULL);
 
   queueDelete (fifo);
+  char file[18] = "for_plots";
+  csvfile(waits, file);
   gettimeofday(&end_time, NULL);
-  long double aggreg_time = 0;
-  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)*0.001;
-  long double mean_time = 0;
+  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)/1000;
   for (int i=0; i<LOOP*PRO_COUNT; i++) {
     mean_time += waits[i];
   }
   mean_time = mean_time/(LOOP*PRO_COUNT);
-  char file[18] = "for_plots";
-  csvfile(waits, file);
   printf("Aggregation time of program: %f ms\n", aggreg_time);
   printf("Mean value of waiting time: %f us\n", mean_time);
   return 0;
