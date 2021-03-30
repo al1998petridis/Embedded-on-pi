@@ -77,8 +77,8 @@ int main ()
   mean_time = mean_time/(LOOP*PRO_COUNT);
   char file[18] = "for_plots";
   csvfile(waits, file);
-  printf("Aggregation time of program: %f\n", aggreg_time);
-  printf("Mean value of waiting time: %f\n", mean_time);
+  printf("Aggregation time of program: %f ms\n", aggreg_time);
+  printf("Mean value of waiting time: %f us\n", mean_time);
   return 0;
 }
 
@@ -128,7 +128,7 @@ void *consumer (void *q)
       gettimeofday(&tfinish,NULL);
       pthread_cond_signal (fifo->notFull);
       waits[counter] = tfinish.tv_sec*1000000 + tfinish.tv_usec - d.wait_time;
-      printf("Waiting time was %Lf seconds\n",waits[counter]);
+      printf("Waiting time was %Lf us\n",waits[counter]);
 	    counter++;
       d.work(d.arg);
     }
@@ -225,6 +225,6 @@ void csvfile (long double waits[], char *file)
   file = strcat(file, ".csv");
   f = fopen(file, "w");
   for (int i=0; i<LOOP*PRO_COUNT; i++)
-    fprintf(f, "%d , %lf", i,waits[i]);
+    fprintf(f, "%d , %Lf", i,waits[i]);
   fclose(f);
 }
