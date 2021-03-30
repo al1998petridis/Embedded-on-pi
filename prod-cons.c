@@ -69,7 +69,7 @@ int main ()
   queueDelete (fifo);
   gettimeofday(&end_time, NULL);
   long double aggreg_time = 0;
-  aggreg_time = (end_time.tv_sec - start.time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)*0.001;
+  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)*0.001;
   long double mean_time = 0;
   for (int i=0; i<LOOP*PRO_COUNT; i++) {
     mean_time += waits[i];
