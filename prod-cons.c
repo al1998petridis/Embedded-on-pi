@@ -75,6 +75,7 @@ int main ()
     mean_time += waits[i];
   }
   mean_time = mean_time/(LOOP*PRO_COUNT);
+  char file[18] = "for_plots";
   csvfile(waits, file);
   printf("Aggregation time of program: %lf", aggreg_time);
   printf("Mean value of waiting time: %lf", mean_time);
@@ -84,7 +85,7 @@ int main ()
 void *producer (void *q)
 {
   struct timeval tstart;
-  int j;
+  int j, random;
   queue *fifo;
   fifo = (queue *)q;
 
