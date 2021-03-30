@@ -47,6 +47,7 @@ int main ()
   double long aggreg_time = 0;
   double long mean_time = 0;
   gettimeofday(&start_time, NULL);
+ 
   queue *fifo;
   pthread_t pro[PRO_COUNT], con[CON_COUNT];
   pthread_attr_t attr;
@@ -69,16 +70,19 @@ int main ()
     pthread_join (con[i], NULL);
 
   queueDelete (fifo);
+
   char file[18] = "for_plots";
-  csvfile(waits, file);
+
   gettimeofday(&end_time, NULL);
-  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)/1000;
+  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000;
+  aggreg_time += (end_time.tv_usec - start_time.tv_usec)/1000;
   for (int i=0; i<LOOP*PRO_COUNT; i++) {
     mean_time += waits[i];
   }
   mean_time = mean_time/(LOOP*PRO_COUNT);
-  printf("Aggregation time of program: %f ms\n", aggreg_time);
-  printf("Mean value of waiting time: %f us\n", mean_time);
+  printf("Aggregation time of program: %Lf ms\n", aggreg_time);
+  printf("Mean value of waiting time: %Lf us\n", mean_time);
+  csvfile(waits, file);
   return 0;
 }
 
@@ -106,6 +110,7 @@ void *producer (void *q)
     gettimeofday(&tstart, NULL);
     p1->wait_time = tstart.tv_sec*1000000 + tstart.tv_usec;
     queueAdd (fifo, p1);
+    printf ("producer: send\n");
     pthread_mutex_unlock (fifo->mut);
     pthread_cond_signal (fifo->notEmpty);
   }
@@ -125,11 +130,12 @@ void *consumer (void *q)
     pthread_mutex_lock (fifo->mut);
     if (!fifo->empty && counter<LOOP*PRO_COUNT) {
       queueDel (fifo, &d);
+      printf ("consumer: recieved\n");
       gettimeofday(&tfinish,NULL);
       pthread_cond_signal (fifo->notFull);
       waits[counter] = tfinish.tv_sec*1000000 + tfinish.tv_usec - d.wait_time;
       printf("Waiting time was %Lf us\n",waits[counter]);
-	    counter++;
+      counter++;
       d.work(d.arg);
     }
     else if (counter == LOOP*PRO_COUNT) {
@@ -140,19 +146,6 @@ void *consumer (void *q)
       printf ("consumer: queue EMPTY.\n");
       pthread_cond_wait (fifo->notEmpty, fifo->mut);
     }
-/*    while (fifo->empty) {
-      printf ("consumer: queue EMPTY.\n");
-      pthread_cond_wait (fifo->notEmpty, fifo->mut);
-    }
-    queueDel (fifo, &d);
-    gettimeofday(&tfinish,NULL);
-    pthread_cond_signal (fifo->notFull);
-    waits[counter] = tfinish.tv_sec*1000000 + tfinish.tv_usec - d.wait_time;
-    printf("Waiting time was %lf seconds\n",waits[counter]);
-	  counter++;
-    d.work(d.arg);
-    pthread_cond_signal (fifo->notFull);
-    printf ("consumer: recieved\n");*/
     pthread_mutex_unlock (fifo->mut);
   }
   return (NULL);
@@ -225,6 +218,6 @@ void csvfile (double long waits[], char *file)
   file = strcat(file, ".csv");
   f = fopen(file, "w");
   for (int i=0; i<LOOP*PRO_COUNT; i++)
-    fprintf(f, "%d , %Lf\n", i,waits[i]);
+    fprintf(f, "%Lf\n",waits[i]);
   fclose(f);
 }
