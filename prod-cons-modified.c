@@ -8,7 +8,7 @@
 #define QUEUESIZE 50
 #define LOOP 100000
 #define PRO_COUNT 1
-#define CON_COUNT 33
+#define CON_COUNT 40
 
 void *producer (void *args);
 void *consumer (void *args);
@@ -24,7 +24,6 @@ void *showMe(void *i){
   printf("Just Display %d\n",s);
 }
 
-struct timeval start_time, end_time;
 int counter = 0; //counter for how many items get into queue
 double long waits[LOOP*PRO_COUNT];
 
@@ -44,9 +43,7 @@ void csvfile (double long waits[], char *file);
 
 int main ()
 {
-  double long aggreg_time = 0;
   double long mean_time = 0;
-  gettimeofday(&start_time, NULL);
  
   queue *fifo;
   pthread_t pro[PRO_COUNT], con[CON_COUNT];
@@ -60,10 +57,10 @@ int main ()
     exit (1);
   }
 
-  for (int i=0; i<PRO_COUNT; i++)
-    pthread_create (&pro[i], NULL, producer, fifo);
   for (int i=0; i<CON_COUNT; i++)
     pthread_create (&con[i], NULL, consumer, fifo);
+  for (int i=0; i<PRO_COUNT; i++)
+    pthread_create (&pro[i], NULL, producer, fifo);
   for (int i=0; i<PRO_COUNT; i++)
     pthread_join (pro[i], NULL);
   for (int i=0; i<CON_COUNT; i++)
@@ -73,13 +70,10 @@ int main ()
 
   char file[18] = "for_plots";
 
-  gettimeofday(&end_time, NULL);
-  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)/1000;
   for (int i=0; i<LOOP*PRO_COUNT; i++) {
     mean_time += waits[i];
   }
   mean_time = mean_time/(LOOP*PRO_COUNT);
-  printf("Aggregation time of program: %Lf ms\n", aggreg_time);
   printf("Mean value of waiting time: %Lf us\n", mean_time);
   csvfile(waits, file);
   return 0;
