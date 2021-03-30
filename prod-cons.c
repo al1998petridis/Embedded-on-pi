@@ -3,11 +3,12 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <string.h>
 
-#define QUEUESIZE 10
-#define LOOP 1000000
-#define PRO_COUNT 5
-#define CON_COUNT 7
+#define QUEUESIZE 50
+#define LOOP 100000
+#define PRO_COUNT 1
+#define CON_COUNT 33
 
 void *producer (void *args);
 void *consumer (void *args);
@@ -46,7 +47,9 @@ int main ()
   gettimeofday(&start_time, NULL);
   queue *fifo;
   pthread_t pro[PRO_COUNT], con[CON_COUNT];
-  
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
   fifo = queueInit ();
   if (fifo ==  NULL) {
@@ -81,18 +84,18 @@ int main ()
 void *producer (void *q)
 {
   struct timeval tstart;
-
+  int j;
   queue *fifo;
   fifo = (queue *)q;
 
-  for (int j = 0; j < LOOP; j++) {
-
+  for (j = 0; j < LOOP; j++) {
+    random = rand()%10;
     workFunction *p1;
     int* argum = (int*)malloc(sizeof(int));
     p1 = (workFunction *)malloc(sizeof(workFunction));
-    p1->work = &showMe;
-    argum[0] = rand()%10;
+    argum = &random;
     p1->arg = (void *) argum;
+    p1->work = &showMe;
 
     pthread_mutex_lock (fifo->mut);
     while (fifo->full) {
@@ -100,11 +103,12 @@ void *producer (void *q)
       pthread_cond_wait (fifo->notFull, fifo->mut);
     }
     gettimeofday(&tstart, NULL);
-    p1->wait_time = tstart.tv_sec*1000 + tstart.tv_usec*0.001;
+    p1->wait_time = tstart.tv_sec*1000000 + tstart.tv_usec;
     queueAdd (fifo, p1);
     pthread_mutex_unlock (fifo->mut);
     pthread_cond_signal (fifo->notEmpty);
   }
+  pthread_cond_broadcast (fifo->notEmpty);
   return (NULL);
 }
 
@@ -118,19 +122,37 @@ void *consumer (void *q)
 
   while (1) {
     pthread_mutex_lock (fifo->mut);
-    while (fifo->empty) {
+    if (!fifo->empty && counter<LOOP*PRO_COUNT) {
+      queueDel (fifo, &d);
+      gettimeofday(&tfinish,NULL);
+      pthread_cond_signal (fifo->notFull);
+      waits[counter] = tfinish.tv_sec*1000000 + tfinish.tv_usec - d.wait_time;
+      printf("Waiting time was %lf seconds\n",waits[counter]);
+	    counter++;
+      d.work(d.arg);
+    }
+    else if (counter == LOOP*PRO_COUNT) {
+      pthread_mutex_unlock(fifo -> mut);
+      break;
+    }
+    else if (fifo->empty) {
+      printf ("consumer: queue EMPTY.\n");
+      pthread_cond_wait (fifo->notEmpty, fifo->mut);
+    }
+/*    while (fifo->empty) {
       printf ("consumer: queue EMPTY.\n");
       pthread_cond_wait (fifo->notEmpty, fifo->mut);
     }
     queueDel (fifo, &d);
     gettimeofday(&tfinish,NULL);
-    waits[counter] = tfinish.tv_sec*1000 + tfinish.tv_usec*0.001 - d.wait_time;
-    printf("Waiting time was %lf seconds\n",waits[counter]);
-	counter++;
-    d.work(d.arg);
-    pthread_mutex_unlock (fifo->mut);
     pthread_cond_signal (fifo->notFull);
-    printf ("consumer: recieved\n");
+    waits[counter] = tfinish.tv_sec*1000000 + tfinish.tv_usec - d.wait_time;
+    printf("Waiting time was %lf seconds\n",waits[counter]);
+	  counter++;
+    d.work(d.arg);
+    pthread_cond_signal (fifo->notFull);
+    printf ("consumer: recieved\n");*/
+    pthread_mutex_unlock (fifo->mut);
   }
   return (NULL);
 }
@@ -171,7 +193,6 @@ void queueDelete (queue *q)
 
 void queueAdd (queue *q, workFunction *in)
 {
-  gettimeofday(&start_time,NULL);
   q->buf[q->tail] = *in;
   q->tail++;
   if (q->tail == QUEUESIZE)
