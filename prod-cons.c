@@ -74,8 +74,7 @@ int main ()
   char file[18] = "for_plots";
 
   gettimeofday(&end_time, NULL);
-  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000;
-  aggreg_time += (end_time.tv_usec - start_time.tv_usec)/1000;
+  aggreg_time = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_usec - start_time.tv_usec)/1000;
   for (int i=0; i<LOOP*PRO_COUNT; i++) {
     mean_time += waits[i];
   }
