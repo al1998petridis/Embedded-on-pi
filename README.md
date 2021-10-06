@@ -3,16 +3,21 @@
 ## Final Project for Empbedded systems 2021
 
 ### Compiling
-First of, you must clone current repository with ``` $ git clone https://github.com/al1998petridis/Embedded-on-pi.git ``` 
+First of, you must clone current repository
 
-Go to clone folder and change line 17 from file Makefile
+Create a folder ``` $ mkdir embedded ```
 
-For local execution: ``` $ CC = gcc ```
+Go to folder you just created ``` $ cd /embedded ```
+
+``` $ git clone https://github.com/al1998petridis/Embedded-on-pi.git ``` 
+Go to Project files ``` $ cd Embedded-on-pi/Final/ProjectFiles ```
+
+Change line 17 from file Makefile
+
+For local execution: ``` CC = gcc ```
     
-For Raspberry pi 3 execution: ``` $ CC = arm-linux-gnueabihf-gcc ```
+For Raspberry pi 3 execution: ```  CC = arm-linux-gnueabihf-gcc ```
     
-Open up Bash into folder ``` $ cd ../Final/ProjectFiles ```
-
 Run ``` $ make clean ```
 
 Run ``` $ make ```
