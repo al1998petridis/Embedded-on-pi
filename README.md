@@ -2,7 +2,7 @@
 
 ## Final Project for Empbedded systems 2021
 ### Compilation
--> First of, you must clone current repository with ``` $ git clone https://github.com/al1998petridis/Embedded-on-pi/ ```
+-> First of, you must clone current repository with ``` $ git clone https://github.com/al1998petridis/Embedded-on-pi/ ``` \n
 -> Go to clone folder and change line 17 from file Makefile
     -> For local execution: ``` $ CC = gcc ```
     -> For raspberry pi execution: ``` $ CC = arm-linux-gnueabihf-gcc ```
