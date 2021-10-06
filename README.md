@@ -8,7 +8,7 @@ Go to clone folder and change line 17 from file Makefile
 
 For local execution: ``` $ CC = gcc ```
     
-For raspberry pi execution: ``` $ CC = arm-linux-gnueabihf-gcc ```
+For Raspberry pi 3 execution: ``` $ CC = arm-linux-gnueabihf-gcc ```
     
 Open up Bash into folder ``` $ cd ../Final/ProjectFiles ```
 
@@ -18,6 +18,6 @@ Run ``` $ make ```
 
 For local execution: ``` $ make exec ```
    
-For raspberry execution: ``` $ scp covidExe root@10.0.0.1:/root ```
+For Raspberry pi execution: ``` $ scp covidExe root@10.0.0.1:/root ```
     
-and into rasberry with ``` $ ssh 10.0.0.1 -lroot ``` and your password go to /root and run ``` $ ./covidExe ```
+and connect to Rasberry pi with ``` $ ssh 10.0.0.1 -lroot ``` and your password go to /root and run ``` $ ./covidExe ```
