@@ -12,7 +12,7 @@ Go to folder you just created ``` $ cd /embedded ```
 ``` $ git clone https://github.com/al1998petridis/Embedded-on-pi.git ``` 
 Go to Project files ``` $ cd Embedded-on-pi/Final/ProjectFiles ```
 
-Change line 17 from file Makefile
+Change line 17 from file Makefile ``` $ nano Makefile ```
 
 For local execution: ``` CC = gcc ```
     
