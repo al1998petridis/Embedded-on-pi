@@ -3,7 +3,7 @@
 ## Final Project for Empbedded systems 2021
 
 ### Compiling
-First of, you must clone current repository with ``` $ git clone https://github.com/al1998petridis/Embedded-on-pi/ ``` 
+First of, you must clone current repository with ``` $ git clone https://github.com/al1998petridis/Embedded-on-pi/tree/main/Final/ProjectFiles ``` 
 
 Go to clone folder and change line 17 from file Makefile
 
