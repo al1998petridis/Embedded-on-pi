@@ -20,4 +20,6 @@ For local execution: ``` $ make exec ```
    
 For Raspberry pi execution: ``` $ scp covidExe root@10.0.0.1:/root ```
     
-and connect to Rasberry pi with ``` $ ssh 10.0.0.1 -lroot ``` and your password go to /root and run ``` $ ./covidExe ```
+Connect to Rasberry pi with ``` $ ssh 10.0.0.1 -lroot ``` and your password
+
+``` $ cd /root``` and run ``` $ ./covidExe ```
