@@ -5,7 +5,11 @@ import matplotlib.pyplot as plt
 mydata = []
 readfile = open('BTnearme_call.csv', "r")
 for line in readfile:
-    h,m,s = line.split(':')
+    try:
+        h,m,s = line.split(':')
+    except ValueError:
+        print(line)
+        exit()
     mydata.append(float(h)*3600+float(m)*60+float(s))
 mydata = np.array(mydata)
 size = mydata.size
