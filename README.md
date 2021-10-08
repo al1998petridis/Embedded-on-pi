@@ -38,6 +38,6 @@ For statistics of our difference between the time that we want to call and the a
 
 we can run main.py that exists into folder /Final/Statistics
 
-Go to file ``` $ cd ../Statistics ```
+Go to folder ``` $ cd ../Statistics ```
 
 Run python script ``` $ py main.c ```
