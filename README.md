@@ -40,4 +40,4 @@ we can run main.py that exists into folder /Final/Statistics
 
 Go to folder ``` $ cd ../Statistics ```
 
-Run python script ``` $ py main.c ```
+Run python script ``` $ py main.py ```
