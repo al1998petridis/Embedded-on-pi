@@ -31,3 +31,13 @@ For Raspberry pi execution: Move covidExe file to Raspberry pi ``` $ scp covidEx
 Connect to Rasberry pi with ``` $ ssh 10.0.0.1 -lroot ``` and your password
 
 Type ``` $ cd /root``` and run ``` $ ./covidExe ```
+
+### Statistics
+
+For statistics of our difference between the time that we want to call and the actual call of the function BTnearMe.
+
+we can run main.py that exists into folder /Final/Statistics
+
+Go to file ``` $ cd ../Statistics ```
+
+Run python script ``` $ py main.c ```
