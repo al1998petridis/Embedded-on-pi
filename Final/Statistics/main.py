@@ -21,7 +21,6 @@ myarr = np.array(myarr)
 final = (mydata - myarr)
 
 print("Max error: ", max(final))
-print("Min error: ", min(final))
 print("Mean error: ", sum(final)/len(final))
 n = len(final)
 mean_ = sum(final) / n
