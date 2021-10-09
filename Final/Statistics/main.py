@@ -24,6 +24,7 @@ myarr = np.array(myarr)
 # Create differences array
 final = (mydata - myarr)
 
+# Statistics
 print("Max error: ", max(final))
 print("Mean error: ", sum(final)/len(final))
 n = len(final)
