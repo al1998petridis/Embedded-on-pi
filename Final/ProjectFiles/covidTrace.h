@@ -107,6 +107,7 @@ void push(node_t** head_ref, macaddress new_mac) {
   new_node->next = (*head_ref);
   (*head_ref) = new_node;
   fprintf(log_file, "Pushed Mac address: %" PRIu64 ", Time scanned:%d\n", new_mac.macValue, (int) new_mac.timeCaptured);
+  fflush(log_file);
 }
 
 /*********************************************************************
@@ -135,6 +136,7 @@ void deleteNode(node_t** head_ref, macaddress new_mac) {
   prev->next = temp->next;
   free(temp);
   fprintf(log_file, "Delete Mac address: %" PRIu64 ", Time scanned:%d\n", new_mac.macValue, (int) new_mac.timeCaptured);
+  fflush(log_file);
 } 
 
 
@@ -155,6 +157,7 @@ macaddress BTnearMe() {
   timespec_get(&ts, TIME_UTC);
   strftime(buff1, sizeof(buff1), "%T", gmtime(&ts.tv_sec));
   fprintf(BTnearMe_call, "%s.%09ld\n", buff1, ts.tv_nsec);
+  fflush(BTnearMe_call);
 //  sprintf(buff2, "%s.%09ld\n", buff1, ts.tv_nsec);
 //  fwrite(buff2, sizeof(buff2), 1, BTnearMe_call);
   randMac.key = (rand() % POPULATION) + 1;
@@ -180,6 +183,7 @@ void push_contact(macaddress randMac) {
   else if (search(nearContactsHead, randMac.key) == 0) {
     time_t time_limit = randMac.timeCaptured - search(allContactsHead, randMac.key);
     fprintf(log_file, "Seen %d seconds before. Mac address: %" PRIu64 ", Time scanned: %d\n", (int) time_limit, randMac.macValue, (int) randMac.timeCaptured);
+    fflush(log_file);
     if ((time_limit >= 4*60*SECOND) && (time_limit <= 20*60*SECOND)) {
       push(&nearContactsHead, randMac);
       return;
@@ -219,12 +223,16 @@ void print_near_contacts() {
   timespec_get(&ts, TIME_UTC);
   strftime(buff2, sizeof(buff2), "%D %T", gmtime(&ts.tv_sec));
   fprintf(near_contacts_file, "%d Macaddreses were uploaded on %s.%09ld\n", getCount(nearContactsHead), buff2, ts.tv_nsec);
+  fflush(near_contacts_file);
   while (head != NULL) {
     fprintf(near_contacts_file, "%" PRIu64 "\n",head->value.macValue);
+    fflush(near_contacts_file);
     head = head->next;
   }
   fprintf(near_contacts_file, "\n");
+  fflush(near_contacts_file);
   fprintf(log_file, "nearContacts.txt updated!\n");
+  fflush(log_file);
 }
 
 /*********************************************************************
@@ -361,6 +369,7 @@ void* test_covid()  {
       timespec_get(&ts, TIME_UTC);
       strftime(buff2, sizeof(buff2), "%D %T", gmtime(&ts.tv_sec));
       fprintf(log_file, "Upload %d near contacts after possitive COVID test\nLocal date & time = %s.%09ld\n", getCount(nearContactsHead), buff2, ts.tv_nsec);
+      fflush(log_file);
       pthread_mutex_unlock(&mutex);
     }
 
